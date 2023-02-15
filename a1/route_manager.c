@@ -12,8 +12,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-
+// explicit function declarations since main is written first
 void useCase1(int argc, char *argv[]);
+void useCase2(int argc, char *argv[]);
+void useCase3(int argc, char *argv[]);
+
+
 /**
  * Function: main
  * --------------
@@ -33,13 +37,13 @@ int main(int argc, char *argv[])
 		printf("Usage: arguments must align with the three use cases provided in assignment outline");
 		exit(1);
 	}
-
-	if (argc = 4) {
+	if (argc == 4) {
+		printf("use case1");
 		useCase1(argc,argv);
-	else if (argc = 5) {
-		useCase2(argv);
-	else if (argc = 6) {
-		useCase3(argv);
+	} else if (argc == 5) {
+		useCase2(argc, argv);
+	} else if (argc == 6) {
+		useCase3(argc,argv);
 	}
 	return 0;
 }
@@ -136,7 +140,7 @@ void useCase1(int argc, char *argv[]) {
 	}
 
 	if (results_found == 0) {
-		fputs("NO RESULTS FOUND.", op);
+		fprintf(op, "NO RESULTS FOUND.\n");
 	}
 
 	fclose(fp);
@@ -168,7 +172,6 @@ void useCase2(int argc, char *argv[]) {
 	int results_found = 0;
 
 	//initialize variables for the position of the search criteria we are interested in
-	int data = 0;
 	int frCountry = 5;
 	int toCity = 9;
 	int toCountry = 10;
@@ -177,7 +180,7 @@ void useCase2(int argc, char *argv[]) {
 	char *data = NULL;
 	char *src_country = NULL;
 	char *dest_city = NULL;
-	char *dest_city = NULL;
+	char *dest_country = NULL;
 
 	for (int i=1;i<argc;i+=1) {
        	//note: Floating numbers, ie. the 7 in first IF, are there to overlook the tag ("--DATA") and isolate the search criteria
@@ -189,10 +192,11 @@ void useCase2(int argc, char *argv[]) {
 			dest_city = argv[i]+12;
 		} else if (strncmp(argv[i], "--DEST_COUNTRY=",15) == 0) {
 			dest_country = argv[i]+15;
-		}else {
+		} else {
 			printf("Invalid argument present: %s", argv[i]);
 			exit(1);
 		}
+
 	}
 
 
@@ -225,7 +229,7 @@ void useCase2(int argc, char *argv[]) {
 			if (i == frCountry && strcmp(token, src_country) == 0) {
 				test1 = 1;
 			} else if (i == toCity && strcmp(token, dest_city) == 0) {
-				test2 = 1
+				test2 = 1;
 			} else if  (i == toCountry && strcmp(token, dest_country) == 0) {
 				test3 = 1;
 			} 
@@ -246,7 +250,7 @@ void useCase2(int argc, char *argv[]) {
 	}
 
 	if (results_found == 0) {
-		fputs("NO RESULTS FOUND.", op);
+		fputs("NO RESULTS FOUND.\n", op);
 	}
 
 	fclose(fp);
@@ -277,9 +281,8 @@ void useCase3(int argc, char *argv[]) {
 	int results_found = 0;
 
 	//initialize variables for the position of the search criteria we are interested in
-	int data = 0;
-	int frCity = 4
-	int frCountry = 5;
+	int frCity = 4;
+	int frmCountry = 5;
 	int toCity = 9;
 	int toCountry = 10;
 	
@@ -288,7 +291,7 @@ void useCase3(int argc, char *argv[]) {
 	char *src_city = NULL;
 	char *src_country = NULL;
 	char *dest_city = NULL;
-	char *dest_city = NULL;
+	char *dest_country = NULL;
 
 	for (int i=1;i<argc;i+=1) {
        	//note: Floating numbers, ie. the 7 in first IF, are there to overlook the tag ("--DATA") and isolate the search criteria
@@ -336,10 +339,10 @@ void useCase3(int argc, char *argv[]) {
 		int test4 = 0;
 		while (token != NULL) {
 			items[i] = token;
-			if (i == frCountry && strcmp(token, src_country) == 0) {
+			if (i == frmCountry && strcmp(token, src_country) == 0) {
 				test1 = 1;
 			} else if (i == toCity && strcmp(token, dest_city) == 0) {
-				test2 = 1
+				test2 = 1;
 			} else if  (i == toCountry && strcmp(token, dest_country) == 0) {
 				test3 = 1;
 			} else if (i == frCity && strcmp(token, src_city) == 0) {
@@ -352,17 +355,17 @@ void useCase3(int argc, char *argv[]) {
 		if (test1 == 1 && test2 == 1 && test3 == 1 && test4 == 1) {
 			//formatting as described in outline
 			if (intro_printed == 0) {
-				fprintf(op,"FLIGHTS FROM %s TO %s, %s:\n", items[frCity], items[frCountry], items[toCity], items[toCountry]); 
+				fprintf(op,"FLIGHTS FROM %s, %s TO %s, %s:\n", items[frCity], items[frmCountry], items[toCity], items[toCountry]); 
 				intro_printed = 1;
 			}
-			fprintf(op,"AIRLINE: %s (%s) ROUTE: %s (%s), %s\n" ,items[0], items[1], items[6], items[11]);
+			fprintf(op,"AIRLINE: %s (%s) ROUTE: %s-%s\n" ,items[0], items[1], items[6], items[11]);
 			results_found = 1;
 
 		}
 	}
 
 	if (results_found == 0) {
-		fputs("NO RESULTS FOUND.", op);
+		fputs("NO RESULTS FOUND.\n", op);
 	}
 
 	fclose(fp);
